@@ -1,15 +1,15 @@
 const {getTasksService,postTasksService,deleteTasksService,getSingleTaskService,patchTaskService}=require('../Services/tasks');
 const getTasks=(req,resp)=>{
   let tasks=getTasksService();
-  resp.send(tasks);
+  resp.status(200).send(tasks);
 };
 const postTasksHandler=(req,resp)=>{
   const thisTask=postTasksService(req,resp);
-  resp.send(thisTask);
+  resp.status(201).send(thisTask);
 };
 const deleteTasksHandler=(req,resp)=>{
   let tasks=deleteTasksService(req,resp);
-  resp.send(tasks);
+  resp.status(200).send(tasks);
 };
 const getSingleTaskHandler=(req,resp)=>{
   return getSingleTaskService(req,resp); 
