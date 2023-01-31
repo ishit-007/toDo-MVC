@@ -1,4 +1,5 @@
 const db = require('../database/models');
+const { findTaskUsingId } = require('../utils/taskUtils');
 const getTasksService = async () => {
   const resp = await db.Task.findAll();
   return resp;
@@ -12,7 +13,7 @@ const deleteTasksService = async () => {
   return deleteResp;
 };
 const getSingleTaskService = async (id) => {
-  const thisTask = await db.Task.findOne({ where: { id: id } });
+  const thisTask = await findTaskUsingId(id);
   return thisTask;
 
 };
