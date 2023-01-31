@@ -1,21 +1,29 @@
 const {getTasksService,postTasksService,deleteTasksService,getSingleTaskService,patchTaskService}=require('../Services/tasks');
-const getTasks=(req,resp)=>{
-  let tasks=getTasksService();
+const getTasks=async(req,resp)=>{
+  let tasks=await getTasksService();
   resp.status(200).send(tasks);
 };
-const postTasksHandler=(req,resp)=>{
-  const thisTask=postTasksService(req,resp);
+const postTasksHandler=async(req,resp)=>{
+  const thisTask=await postTasksService(req.body);
   resp.status(201).send(thisTask);
 };
-const deleteTasksHandler=(req,resp)=>{
-  let tasks=deleteTasksService(req,resp);
-  resp.status(200).send(tasks);
+
+const deleteTasksHandler=async(req,resp)=>{
+  let deletedEntries=await deleteTasksService();
+  resp.status(200).send(`Deleted ${deletedEntries} entries`);
 };
-const getSingleTaskHandler=(req,resp)=>{
-  return getSingleTaskService(req,resp); 
+const getSingleTaskHandler=async(req,resp)=>{
+  const thisTask=await getSingleTaskService(req.params.id);
+  if(thisTask===null){
+    resp.status(404).send('Task not found');
+  }
+  else{
+    resp.status(200).send(thisTask);
+  }
 };
-const patchTaskHandler=(req,resp)=>{
-  return patchTaskService(req,resp); 
+const patchTaskHandler=async(req,resp)=>{
+  const updatedEntries=await patchTaskService(req.params.id);
+  resp.status(200).send(`Updated ${updatedEntries} entries`);
 };
 module.exports={
   getTasks:getTasks,

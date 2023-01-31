@@ -1,43 +1,29 @@
-const uuid=require('uuid');
-let tasks=[];
-const getTasksService=()=>{
-  return tasks;
+const db = require('../database/models');
+const getTasksService = async () => {
+  const resp = await db.Task.findAll();
+  return resp;
 };
-const postTasksService=(req)=>{
-  const recievedData = req.body;
-  recievedData['id'] = uuid.v4();
-  recievedData['isComplete'] = false; 
-  tasks.push(recievedData);
-  return recievedData;
+const postTasksService = async (recievedData) => {
+  const newTask = await db.Task.create({ isComplete: false, taskName: recievedData.name });
+  return newTask;
 };
-const deleteTasksService=()=>{
-  tasks=tasks.filter(task => task.isComplete==false);
-  return tasks;
+const deleteTasksService = async () => {
+  const deleteResp = await db.Task.destroy({ where: { isComplete: true } });
+  return deleteResp;
 };
-const getSingleTaskService=(req,resp)=>{
-  let indexOfObj=tasks.findIndex((task)=>task.id==req.params.id);
-  if(indexOfObj==-1){
-    return resp.status(404).send('No tasks found');
-  }
-  else{
-    return resp.status(200).send(tasks[indexOfObj]);
-  }
+const getSingleTaskService = async (id) => {
+  const thisTask = await db.Task.findOne({ where: { id: id } });
+  return thisTask;
+
 };
-const patchTaskService=(req,resp)=>{
-  let indexOfObj=tasks.findIndex((task)=>task.id==req.params.id);
-  if(indexOfObj==-1){
-    resp.status(404).send('No request found with given ID');
-  }
-  else{
-    let thisTask=tasks[indexOfObj];
-    thisTask.isComplete=!thisTask.isComplete;
-    resp.status(200).send(thisTask);
-  }
+const patchTaskService = async (id) => {
+  const updatedTask = await db.Task.update({ isComplete: true }, { where: { id: id } });
+  return updatedTask[0];
 };
-module.exports={
-  getTasksService:getTasksService,
-  postTasksService:postTasksService,
-  deleteTasksService:deleteTasksService,
-  getSingleTaskService:getSingleTaskService,
-  patchTaskService:patchTaskService
+module.exports = {
+  getTasksService: getTasksService,
+  postTasksService: postTasksService,
+  deleteTasksService: deleteTasksService,
+  getSingleTaskService: getSingleTaskService,
+  patchTaskService: patchTaskService
 };
