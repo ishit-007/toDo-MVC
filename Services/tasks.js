@@ -15,13 +15,13 @@ const deleteTasksService = async () => {
 const getSingleTaskService = async (id) => {
   const thisTask = await findTaskUsingId(id);
   return thisTask;
-
 };
 const patchTaskService = async (id) => {
   const updatedTask = await db.Task.update({ isComplete: true }, { where: { id: id } });
   return updatedTask[0];
 };
-module.exports = {
+module.exports =
+{
   getTasksService,
   postTasksService,
   deleteTasksService,

@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const {HttpError} = require('../utils/httpError');
+const { HttpError } = require('../utils/httpError');
 const idSchema = Joi.object({
   id: Joi.number().integer().min(1).max(1000).required(),
 });
@@ -19,7 +19,6 @@ const postValidator = async (req, resp, next) => {
       resp.status(error.statusCode).json({ message: error.message });
     }
   }
-
 };
 const getValidator = async (req, resp, next) => {
   try {
@@ -32,7 +31,7 @@ const getValidator = async (req, resp, next) => {
   }
   catch (error) {
     if (error instanceof HttpError) {
-      resp.status(error.statusCode).json({ message: error.message });
+      resp.status(error.statusCode).send(error.message);
     }
   }
 };
