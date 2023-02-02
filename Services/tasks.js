@@ -22,9 +22,10 @@ const patchTaskService = async (id) => {
   return updatedTask[0];
 };
 module.exports = {
-  getTasksService: getTasksService,
-  postTasksService: postTasksService,
-  deleteTasksService: deleteTasksService,
-  getSingleTaskService: getSingleTaskService,
-  patchTaskService: patchTaskService
+  getTasksService,
+  postTasksService,
+  deleteTasksService,
+  getSingleTaskService,
+  patchTaskService,
 };
+
