@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PORT = 3000;
+const PORT = 8080;
 const taskRoutes = require('./Routes/taskRoutes.js');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));    //body parser deprecated

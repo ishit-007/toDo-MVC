@@ -1,5 +1,9 @@
+const axios = require('axios');
 const Joi = require('joi');
 const { HttpError } = require('../utils/httpError');
+var tokenSchema = Joi.object().keys({
+  token: Joi.string().min(3).required()
+});
 const idSchema = Joi.object({
   id: Joi.number().integer().min(1).max(1000).required(),
 });
@@ -49,8 +53,35 @@ const patchValidator = async (req, resp, next) => {
     }
   }
 };
+const tokenValidator = async (req, resp, next) => {
+  try {
+    const token = req.headers.token;
+    const { error } = tokenSchema.validate({ token });
+    if (error) {
+      throw new HttpError(error.message, 400);
+    }
+    else {
+      const isTokenValid = await axios.post('http://localhost:3000/token/validate', { token: token });
+      console.log('Entered tokenValidator');
+      console.log(isTokenValid.data);
+      if (isTokenValid.data === true) {
+        next();
+      }
+      else {
+        throw new HttpError('Token is not valid.', 401);
+      }
+    }
+  }
+  catch (error) {
+    console.log(error);
+    if (error instanceof HttpError) {
+      resp.status(error.statusCode).json({ message: error.message });
+    }
+  }
+};
 module.exports = {
   getValidator,
   postValidator,
   patchValidator,
+  tokenValidator
 };
